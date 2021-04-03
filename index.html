@@ -4,9 +4,21 @@
         <title>Search</title>
     </head>
     <body>
-        <form action="https://google.com/search">
-            <input type="text" name="q">
+        <form action="https://google.com/search" method="GET" role="search">
+            <input type="text" name="q" value>
             <input type="submit" value="Google Search">
+        </form>
+        <form action="https://google.com/search" method="GET" role="search" target="_self">
+            <input type="text" name="q">
+            <input type="hidden" name="sclient" value="gws-wiz">
+            <input name="source" type="hidden" value="hp">
+            <input type="submit" name="btnI" aria-label="I'm Feeling Lucky" value="I'm Feeling Lucky">
+        </form>
+        <form action="https://google.com/search" method="GET" role="search">
+            <input type="text" name="q">
+            <input type="hidden" name="sclient" value="img">
+            <input type="hidden" name="tbm" value="isch">
+            <input type="submit" value="Image Search">
         </form>
     </body>
 </html>
