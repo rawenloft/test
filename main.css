@@ -1,0 +1,318 @@
+:root {
+    font-family: "Roboto",arial, sans-serif;
+    font-size: 14px;
+    color: #222;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    outline: none;
+}
+
+/* Search Page Styles */
+html, body {
+    width: 100%;
+    min-width: 400px;
+}
+.header {
+    height: 60px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 10px;
+}
+.nav > :last-child {
+    margin-left: 20px; 
+}
+.main.search {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 20px 20px;
+}
+.main .logo {
+    max-height: 100%;
+    max-width: 100%;
+    width: 272px;
+    height: 100px;
+    padding: 0 8px;
+    margin: -8px 0 18px;
+}
+.logo.center {
+    background-image: url("google_logo.svg");
+    background-size: contain;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+}
+
+.form {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    min-width: 600px;
+    position: relative;
+}
+.form > .search_bar {
+    width: 100%;
+    border-radius: 50px;
+    border: 1px solid #dfe1e5;
+    height: 46px;
+    box-shadow: none;
+    padding: 4px 48px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.search_bar:hover {
+    box-shadow: 0 1px 6px 0 rgb(32 33 36 / 28%);
+}
+
+.search_control {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+}
+.btn {
+    padding: 0 16px;
+    height: 36px;
+    min-width: 60px;
+    line-height: 27px;
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid #f8f9fa;
+    background-color: #f8f9fa;
+    margin: 9px 6px;
+    font-size: 1rem;
+    color: #3c4043;
+    cursor: pointer;
+}
+.main .btn:hover, .btn.back:hover {
+    box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+    border: 1px solid #dadce0;
+}
+
+.nav > .btn > a{
+    line-height: 2.3em;
+    font-size: 1em;
+    color: #fff;
+    font-weight: normal;
+}
+.btn.img_search {
+    background-color: #fe4d4d;
+}
+.btn.img_search:hover {
+    background-image: -webkit-linear-gradient(top,#fe4d4d,#ed4747);
+}
+
+.btn.adv_search {
+    background-color: #4d90fe;
+}
+.btn.adv_search:hover {
+    background-image: -webkit-linear-gradient(top,#4d90fe,#4787ed);
+}
+
+.btn.back > a {
+    color: #fff;
+    z-index: 2;
+}
+.btn.back {
+    background-color: #4285f4;
+}
+.btn.back:hover {
+    background-image: -webkit-linear-gradient(top,#4d90fe,#4787ed);
+    box-shadow: none;
+}
+.s_icon {
+    color: #9aa0a6;
+    position: absolute;
+    z-index: 2;
+    top:19px;
+    left: 21px;
+    transform: scale(0.83);
+}
+
+.m_icon {
+    height: 24px;
+    width: 24px;
+    vertical-align: middle;
+    position: absolute;
+    right: 25px;
+    top: 19px;
+}
+
+/* Images Page Styles */
+.main.images{
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 20px 20px;
+    top: -29px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+}
+.main.images .logo {
+    margin-bottom: 13px;
+}
+.main.images .form {
+    min-width: 550px;
+}
+.main.images .m_icon, .main.images .c_icon, .main.images .ls_icon, .main.images .s_icon {
+    height: 24px;
+    width: 24px;
+    vertical-align: middle;
+    position: absolute;
+    top: 19px;
+}
+.main.images .m_icon {
+    right: 68px;
+}
+.main.images .c_icon {
+    right: 108px;
+    color: grey;
+}
+.main.images .ls_icon {
+    right: 24px;
+    color: #4285f4;
+}
+.main.images .s_icon {
+    left: 20px;
+    top: 18px;
+}
+.main.images .image {
+    position: relative;
+}
+
+.main.images .logo_text {
+    position: absolute;
+    right: 4px;
+    bottom: 12px;
+    font-size: 16px;
+    color: #4285f4;
+    font-weight:300;
+}
+
+/* Advansed Search Page Styles */
+.adv_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f1f1;
+    position: relative;
+}
+.adv_header > .logo {
+    margin: 0;
+    height: 50px;
+    width: 100px;
+    margin-top: -10px;
+    margin-left: 5px;
+    transform: scale(0.91);
+}
+
+.form_header {
+    width: 100%;
+    padding: 25px 35px;
+}
+.line {
+    width: 100%;
+    border-bottom: 1px solid #ebebeb;
+}
+.main.advanced {
+    padding: 0;
+}
+
+.main.advanced > .form_header h2 {
+    font-weight: 400;
+    color: #d93025;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.main.advanced form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 32px 45px;
+    position: relative;
+}
+.main.advanced .form_field {
+    display: flex;
+    width: 100%;
+    height: 42px;
+    align-items: center;
+}
+
+.main.advanced .label_info {
+    max-width: 167px;
+    min-width: 167px;
+    font-size: 13px;
+}
+.main.advanced .input_here, .input_info {
+    height: 29px;
+    width: 100%;
+    max-width: 500px;
+    padding: 1px 8px;
+    border-radius: 1px;
+    border: 1px solid #d9d9d9;
+    min-width: 167px;
+    border-top: 1px solid #c0c0c0;
+    text-align:left;
+}
+
+.main.advanced .comment:not(:first-child) {
+    width: 45%;
+    padding: 14px;
+    font-size: 12px;
+    color: #555;
+}
+.main.advanced .input_here:focus {
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 30%);
+    border: 1px solid #4d90fe;
+}
+.main.advanced .form_desc > .comment ,.main.advanced .form_desc > .label_info{
+    font-size: 16px;
+    color: #222;
+}
+.input_info {
+    border: none;
+}
+.main.advanced .btn.adv_search {
+    color: #fff;
+    box-shadow: none;
+    border:none;
+    align-self: center;
+    margin-right: 0px;
+}
+
+
+/* Madia Queries */
+@media only screen and (max-width: 1000px) {
+    .main.advanced .comment {
+        display: none;
+    }
+    
+}
+@media only screen and (max-width: 768px) {
+    .main.advanced .btn.adv_search {
+        align-self: flex-end;
+    }
+}
