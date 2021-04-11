@@ -60,7 +60,6 @@ def edit_page(request, title):
         "action": "Update",
     })
 
-
 def search(request):
     query = request.GET["q"]
     files = util.list_entries()
@@ -76,7 +75,6 @@ def search(request):
     return HttpResponse(render(request, 'encyclopedia/index.html',{
         "entries": entries,
     }))
-
 
 def convert(title):
     converted = mark.markdown(title)
