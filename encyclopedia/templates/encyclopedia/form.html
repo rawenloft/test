@@ -1,0 +1,23 @@
+{% extends 'encyclopedia/layout.html' %}
+
+{% block title %}
+    {{ title }} page
+{% endblock %}
+
+{% block body %}
+    <h1>{{ title }} page <a href="{% url 'wiki:index' %}" class="btn btn-outline-info">Back</a></h1>
+
+    <form action="{% url 'wiki:?' as url%}" method="post" >
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-primary d-lg-flex" value="{{ action }} page">
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

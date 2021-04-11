@@ -1,0 +1,19 @@
+{% extends 'encyclopedia/layout.html' %}
+
+{% block title %}
+    {{ header }}
+{% endblock %}
+
+{% block body %}
+    {{ title | safe }}
+    <a href="{% url 'wiki:index' %}" class="btn btn-outline-info">Back</a>
+    <a class="btn btn-primary" href="{% url 'wiki:edit' title=header %}" >Edit {{ header }}</a>
+    
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }} alert alert-success"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

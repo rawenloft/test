@@ -1,0 +1,12 @@
+{% extends 'encyclopedia/layout.html' %}
+
+{% block title %}
+    404 File not found
+{% endblock %}
+{% block body %}
+    <h1>404</h1>
+    <h2>File not found</h2>
+    
+    {% comment %} <p>Requested page not exist. Try another page or <a href="{% url 'wiki:edit'%}">create</a> your own page.</p> {% endcomment %}
+    <a href="{% url 'wiki:index' %}">Back</a>
+{% endblock %}
