@@ -59,36 +59,6 @@ def edit_page(request, title):
         "title": header,
         "action": "Update",
     })
-# def add_page(request):
-#     if request.method == "POST":
-#         form = NewPageForm(request.POST)
-#         pages = util.list_entries()
-#         if form.is_valid():title = form.cleaned_data['title']
-#         check = form.fields['title'].widget.attrs.get('readonly')
-#         print(title)
-#         if title in pages:
-#             if check != None: 
-#                 print("Edit page")
-#                 if form.is_valid():
-#                     title = form.cleaned_data["title"]
-#                     content = form.cleaned_data["content"]
-#                     util.save_entry(title, content)
-#                 messages.success(request, "Page successfully saved!")
-#                 return redirect(reverse("wiki:page", kwargs={'title': title}))
-#             else:
-#                 if form.is_valid():
-#                     print("New Page")
-#                     title = form.cleaned_data["title"]
-#                     content = form.cleaned_data["content"]
-#                     messages.error(request, "Page already exist, try to use another title.")
-#                     return render(request, "encyclopedia/add_page.html",{
-#                         "form": form,
-#                         "title": title
-#                     })   
-#     return render(request, "encyclopedia/add_page.html",{
-#         "form": NewPageForm(),
-#         "title": "New"
-#     })
 
 
 def search(request):
@@ -97,12 +67,14 @@ def search(request):
     entries = []
     for item in filter(lambda x: query.lower() in x.lower(), files):
         entries.append(item)
+    if not entries:
+        messages.error(request,"No matching pages found!")
     for page in files:
         if query.lower() == page.lower():
             get_page(request, page)
             return redirect(reverse('wiki:page', kwargs={'title': page}))
     return HttpResponse(render(request, 'encyclopedia/index.html',{
-        'entries': entries
+        "entries": entries,
     }))
 
 
