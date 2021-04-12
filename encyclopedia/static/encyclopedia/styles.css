@@ -60,6 +60,7 @@ input, textarea {
 
 .sidebar {
     background-color: #f0f0f0;
+    background: linear-gradient(to top, #ceecec, #f0f0f0);
     height: 100vh;
     padding: 20px;
 }
