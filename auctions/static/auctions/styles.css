@@ -1,0 +1,33 @@
+:root {
+    --primary-color: #2366ca;
+    --secondary-color: #ff23ed;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    list-style:none;
+}
+body {
+    padding: 10px;
+}
+h3 {
+    color: var(--secondary-color);
+}
+.col {
+    flex-grow: unset;
+}
+.bid {
+    
+    padding: 5px 12px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    text-align: center;
+    width: 30px;
+    height: 30px;
+}
+.legend {
+    margin-left: 10px;
+}
