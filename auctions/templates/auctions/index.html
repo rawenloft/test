@@ -12,19 +12,14 @@
                 <div class="card-body">
                     <h3 class="card-title"> {{item.title}} </h3>
                     <p class="card-text"> {{ item.description }}</p>
-                    
-                        <span>Current price: </span><span class="bid"> {{item.start_bid}} </span> <span class="legend">USD</span>
-                    
-                    <hr />
-                    {% if comments %}
-                        {% for comment in comments %}
-                            {% if comment.rel_listing == item %}
-                            <ul>
-                                <li><em>{{ comment.created_by }}</em> — "{{ comment.content }}" </li>
-                            </ul>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <span>Current price: </span>
+                        <span class="bid"> {{item.start_bid}} </span>
+                        <span class="legend">USD</span>
+                    </small>
+                    <a href="{% url 'listing' listing_id=item.id%}">View</a>
                 </div>
             {% endif %}
         </div>  

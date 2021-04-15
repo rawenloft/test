@@ -3,6 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import User, Listing, Bid, Comment
 
@@ -10,8 +12,6 @@ from .models import User, Listing, Bid, Comment
 def index(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all(),
-        "comments": Comment.objects.all(),
-        "bids": Bid.objects.all(),
     })
 
 
@@ -65,3 +65,59 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "comments": Comment.objects.all()
+    })
+
+
+# @login_required(login_url='auctions/login')
+def add_comment(request, listing_id):
+    user = request.user
+    listing = listing_id
+    use_listing = Listing.objects.get(id=listing)
+    if request.method == "POST":
+        if user.is_authenticated:
+            try:
+                query = request.POST['comment']
+                comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
+                comment.save()
+            except Exception as e:
+                print(e)
+        else:
+            messages.error(request, "You are not authenticated!")
+
+    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing,}))
+
+def get_price(listing_id):
+    current_price = Bid.objects.filter(listing_id=listing_id).last()
+    if current_price is not None:
+        return current_price
+    else:
+        current_price = Listing.objects.get(id=listing_id).start_bid
+        return current_price
+
+def bid(request, listing_id):
+    user = request.user
+    listing = listing_id
+    if request.method == "POST":
+        bid = int(request.POST['bid'])
+        get_starting_bid = Listing.objects.get(id=listing).start_bid
+        print(get_starting_bid)
+        if bid <= get_starting_bid:
+            
+            print("Please bet more money")
+        else:
+            current_price = get_price(listing_id)
+            if current_price >= bid or current_price is None:
+                messages.error(request, "You need to bet more to win this lot!")
+            else:
+                try:
+                    new_bid = Bid.objects.create(listing_id=Listing.objects.get(id=listing),created_by=User.objects.get(username=user), start_bid=Listing.objects.get(id=listing).start_bid, bid=bid, )
+                    new_bid.save()
+                except Exception as e:
+                    print(e)
+    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing,}))

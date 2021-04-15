@@ -18,6 +18,13 @@ h3 {
 }
 .col {
     flex-grow: unset;
+    padding: 0;
+}
+.mb-3 {
+    padding-left: 0;
+}
+form .input-group {
+    flex-wrap: nowrap;
 }
 .bid {
     
@@ -27,6 +34,9 @@ h3 {
     text-align: center;
     width: 30px;
     height: 30px;
+}
+.btn.want{
+    height: 37px;
 }
 .legend {
     margin-left: 10px;

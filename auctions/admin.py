@@ -3,10 +3,10 @@ from .models import User, Listing, Bid, Comment
 # Register your models here.
 
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_by', 'title', 'category', 'description', 'img_url', 'active')
+    list_display = ('id', 'created_by', 'title', 'category', 'description', 'img_url', 'active', 'created_at')
 
 class BidAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_by', 'start_bid', 'highest_bid', 'highest_bidder', 'started_at')
+    list_display = ('created_by', 'start_bid', 'bid', 'listing_id', 'started_at')
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_by', 'content', 'rel_listing')
