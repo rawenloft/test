@@ -13,18 +13,24 @@
 body {
     padding: 10px;
 }
+a.cat_link {
+    text-decoration: none !important;
+}
 h3 {
     color: var(--secondary-color);
 }
 .col {
     flex-grow: unset;
-    padding: 0;
+    /* padding: 0; */
 }
 .mb-3 {
     padding-left: 0;
 }
 form .input-group {
     flex-wrap: nowrap;
+}
+.form.footer {
+    margin-top: 20px;
 }
 .bid {
     
@@ -40,4 +46,14 @@ form .input-group {
 }
 .legend {
     margin-left: 10px;
+}
+.cat_item {
+    padding: 5px 12px;
+    margin: 0 10px;
+    line-height: 1.5;
+    max-height: 2.2em;
+}
+.cat_item:hover {
+    background: linear-gradient(to top, #2366ca77, #234cfa77);
+    
 }

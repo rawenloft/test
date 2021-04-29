@@ -9,7 +9,7 @@
                 <div class="card-footer">
                 <small class="text-muted">
                     <span>Current price: </span>
-                    <span class="bid"> {{listing.start_bid}} </span>
+                    <span class="bid"> {{current_price}} </span>
                     <span class="legend">USD</span>
                 </small>
                 <a href="{% url 'index' %}">Back</a>
@@ -23,6 +23,9 @@
                 <p class="card-text">{{listing.description}}</p>
                 <p class="card-text">
                     <small class="text-muted">Created by: {{listing.created_by}}</small>
+                </p>
+                <p class="card-text">
+                    <small class="text-muted">Last bid by: </small>
                 </p>
                 <p class="card-text">
                     <small class="text-muted">Created at: {{listing.created_at}}</small>

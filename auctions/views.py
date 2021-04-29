@@ -6,12 +6,14 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, CATEGORIES
 
 
 def index(request):
+    bids = Bid.objects.all()
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.all(),
+        "bids": bids
     })
 
 
@@ -68,8 +70,10 @@ def register(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
+    current_price = get_price(listing_id)
     return render(request, "auctions/listing.html", {
         "listing": listing,
+        "current_price": current_price,
         "comments": Comment.objects.all()
     })
 
@@ -83,8 +87,9 @@ def add_comment(request, listing_id):
         if user.is_authenticated:
             try:
                 query = request.POST['comment']
-                comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
-                comment.save()
+                if query:
+                    comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
+                    comment.save()
             except Exception as e:
                 print(e)
         else:
@@ -95,7 +100,7 @@ def add_comment(request, listing_id):
 def get_price(listing_id):
     current_price = Bid.objects.filter(listing_id=listing_id).last()
     if current_price is not None:
-        return current_price
+        return current_price.bid
     else:
         current_price = Listing.objects.get(id=listing_id).start_bid
         return current_price
@@ -121,3 +126,23 @@ def bid(request, listing_id):
                 except Exception as e:
                     print(e)
     return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing,}))
+
+def create(request):
+    return render(request, "auctions/create.html")
+
+def categories(request):
+    categories = []
+    for items in CATEGORIES:
+        categories.append(list(items).pop())
+
+    return render(request, 'auctions/categories.html', {
+        "categories": categories
+    })
+
+def category(request, category):
+    item_list = Listing.objects.filter(category=category)
+    print(item_list)
+    return render(request, 'auctions/category.html', {
+        "item_list": item_list,
+        "category": category
+    })

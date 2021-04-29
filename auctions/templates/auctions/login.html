@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
+<div class="d-flex flex-column">
     <h2>Login</h2>
 
     {% if message %}
@@ -19,6 +19,6 @@
         <input class="btn btn-primary" type="submit" value="Login">
     </form>
 
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
-
+    <div class="form footer">Don't have an account? <a href="{% url 'register' %}">Register here.</a></div>
+</div>
 {% endblock %}
