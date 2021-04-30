@@ -11,8 +11,9 @@ from .models import User, Listing, Bid, Comment, CATEGORIES
 
 def index(request):
     bids = Bid.objects.all()
+    listing = Listing.objects.all()
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all(),
+        "listings": listing,
         "bids": bids
     })
 
@@ -71,10 +72,12 @@ def register(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     current_price = get_price(listing_id)
+    bids = Bid.objects.filter(listing_id=listing_id)
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "current_price": current_price,
-        "comments": Comment.objects.all()
+        "comments": Comment.objects.all(),
+        "bids": bids,
     })
 
 
@@ -87,9 +90,8 @@ def add_comment(request, listing_id):
         if user.is_authenticated:
             try:
                 query = request.POST['comment']
-                if query:
-                    comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
-                    comment.save()
+                comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
+                comment.save()
             except Exception as e:
                 print(e)
         else:
@@ -107,27 +109,48 @@ def get_price(listing_id):
 
 def bid(request, listing_id):
     user = request.user
-    listing = listing_id
+    listing = Listing.objects.get(id=listing_id)
     if request.method == "POST":
         bid = int(request.POST['bid'])
-        get_starting_bid = Listing.objects.get(id=listing).start_bid
-        print(get_starting_bid)
+        get_starting_bid = Listing.objects.get(id=listing_id).start_bid
+        current_price = get_price(listing_id)
         if bid <= get_starting_bid:
-            
-            print("Please bet more money")
-        else:
-            current_price = get_price(listing_id)
-            if current_price >= bid or current_price is None:
-                messages.error(request, "You need to bet more to win this lot!")
-            else:
-                try:
-                    new_bid = Bid.objects.create(listing_id=Listing.objects.get(id=listing),created_by=User.objects.get(username=user), start_bid=Listing.objects.get(id=listing).start_bid, bid=bid, )
-                    new_bid.save()
-                except Exception as e:
-                    print(e)
-    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing,}))
+            return render(request,'auctions/listing.html', {
+                "listing": listing,
+                "current_price": current_price,
+                "message": "Please bet more money!"
+            })
+        try:
+            if listing.created_by == user:
+                return render(request,'auctions/listing.html', {
+                    "listing": listing,
+                    "current_price": current_price,
+                    "message": "You can not bet on your own listing."
+                }) 
+            new_bid = Bid.objects.create(listing_id=listing,created_by=request.user, start_bid=listing.start_bid, bid=bid, )
+            new_bid.save()
+        except Exception as e:
+            print(e)
+    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing.id,}))
 
 def create(request):
+    user = request.user
+    if request.method == "POST":
+        title = request.POST["title"]
+        category = request.POST["category"]
+        description = request.POST["description"] or ""
+        img_url = request.POST["img_url"] or ""
+        start_bid = request.POST["start_bid"]
+
+        print(user, title, category, description, img_url, start_bid)
+        try:
+            listing = Listing.objects.create(created_by=user, title=title, category=category, description=description, img_url=img_url, start_bid=start_bid,created_at=True, active=True,)
+            listing.save()
+            return render(request, "auctions/listing.html", {
+                "listing":listing
+            })
+        except Exception as e:
+            print(e)
     return render(request, "auctions/create.html")
 
 def categories(request):

@@ -26,15 +26,24 @@ h3 {
 .mb-3 {
     padding-left: 0;
 }
+.card {
+    height: 420px;
+}
+.card-body{
+    min-height: none !important;
+}
 form .input-group {
     flex-wrap: nowrap;
 }
 .form.footer {
     margin-top: 20px;
 }
+.card-footer .btn {
+    margin-left: 1.5em;
+}
 .bid {
     
-    padding: 5px 12px;
+    padding: 5px;
     font-size: 1.2rem;
     color: var(--primary-color);
     text-align: center;
@@ -44,16 +53,23 @@ form .input-group {
 .btn.want{
     height: 37px;
 }
-.legend {
-    margin-left: 10px;
-}
+
 .cat_item {
     padding: 5px 12px;
     margin: 0 10px;
     line-height: 1.5;
     max-height: 2.2em;
 }
-.cat_item:hover {
-    background: linear-gradient(to top, #2366ca77, #234cfa77);
-    
+.check.form-check-input {
+    position: inherit !important;
+    margin-top: .55rem;
+    margin-left: 0.25rem !important;
+    width: 1em;
+    height: 1em;
+}
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1200px;
+    }
+
 }

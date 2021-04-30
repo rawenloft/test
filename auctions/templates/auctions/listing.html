@@ -5,28 +5,37 @@
     <div class="card mb-3 col-8" >
         <div class="row no-gutters">
             <div class="col-md-6">
-                <img src="{{listing.img_url}}" class="card-img" alt="...">
+                <img src="{{listing.img_url}}" class="card-img" style="height: 262px"alt="..."> 
                 <div class="card-footer">
-                <small class="text-muted">
-                    <span>Current price: </span>
-                    <span class="bid"> {{current_price}} </span>
-                    <span class="legend">USD</span>
-                </small>
-                <a href="{% url 'index' %}">Back</a>
+                    <small class="text-muted">
+                        <span>Current price: </span>
+                        <span class="bid"> {{current_price}} </span>
+                        <span class="legend">USD</span>
+                    </small>
                 </div>
             
+                {% if message %}
+                    <div class="message alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endif %}
                 
             </div>
             <div class="col-md-6">
-            <div class="card-body">
+            <div class="card-body ">
+                <div class="card-nav d-flex justify-content-between align-items-center">
+                    <a href="#" class="btn btn-outline-primary">Add to Watchlist <span class="material-icons">visibility</span></a>
+                    <a href="{% url 'index' %}" class="btn btn-outline-primary">Back</a>
+                </div>
+                <br>
                 <h5 class="card-title">{{listing.title}}</h5>
                 <p class="card-text">{{listing.description}}</p>
-                <p class="card-text">
-                    <small class="text-muted">Created by: {{listing.created_by}}</small>
+                <p class="card-text d-flex justify-content-between">
+                    <small class="text-muted">Created by: {{listing.created_by|capfirst}}</small>
+
+                    <small class="text-muted">Last bid by: {{bids.last.created_by|capfirst}}</small>
                 </p>
-                <p class="card-text">
-                    <small class="text-muted">Last bid by: </small>
-                </p>
+                
                 <p class="card-text">
                     <small class="text-muted">Created at: {{listing.created_at}}</small>
                 </p>
@@ -40,13 +49,12 @@
                         <input type="submit" value="Place bid" class="btn btn-primary col-5 want">
                     </div>
                 </form>
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li {% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                <div class="form-group">
+                    <label for="active" class="check form-check-label">Lot is active</label>
+                    <input class="check form-check-input" type="checkbox" name="active" id="active" checked={{listing.active}} disabled>
+                    <a href="#" class="btn btn-outline-danger">Close deal</a>
+                 
+                </div>
             </div>
             </div>
         </div>
@@ -77,7 +85,7 @@
         </div>
     </div>
 
-    {% if comments %}
+        {% if comments %}
         <div class="card mb-6 col-8">
             <div class="card-text">
                     <ul>
@@ -95,6 +103,6 @@
                     </ul>
             </div>
         </div>
-    {% endif %}
+        {% endif %}
 
 {% endblock %}

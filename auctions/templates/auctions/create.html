@@ -16,15 +16,18 @@
                 <input class="form-control" autofocus type="text" name="title" placeholder="Title" required>
             </div>
             <div class="form-group">
-                <select class="custom-select" id="category" required>
+                <select class="custom-select" id="category" name="category" required>
                     <option selected>Category: </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="Tools">Tools</option>
+                    <option value="Books">Books</option>
+                    <option value="Spells">Spells</option>
+                    <option value="Potions">Potions</option>
+                    <option value="Herbs">Herbs</option>
+                    <option value="Others">Others</option>
                 </select>
             </div>
             <div class="form-group">
-                <textarea class="form-control" aria-label="description" rows="2" id="description"></textarea>
+                <textarea class="form-control" name="description" aria-label="description" rows="2" id="description"></textarea>
             </div>
             <div class="form-group">
                 <input class="form-control" type="url" name="img_url" placeholder="Enter img url">
