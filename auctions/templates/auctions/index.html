@@ -5,35 +5,28 @@
     <h2 class="col-lg-12">Active Listings</h2>
 
     {% for item in listings %}
-    <div class="col col-lg-3">
-        <div class="card" style="width: 18rem">
-            {% if item.active %}
-                <img src="{{item.img_url}}" class="card-img" style="height: 192px" />
-                <div class="card-body">
-                    <h3 class="card-title"> {{item.title}} </h3>
-                    <p class="card-text"> {{ item.description }}</p>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">
-                        <span>Start price: </span>
 
-                        {% if bids %}
-                            {% for bid in bids %}
-                                {% if bid.listing_id.id == item.id %}
-                                    <span class="bid"> {{ bid.bid }} </span>
-                                
-                                {% endif %}
+    {% if item.active %}
+        <div class="col col-lg-3">
+            <div class="card" style="width: 18rem">
+                    <img src="{{item.img_url}}" class="card-img" style="height: 192px" />
+                    <div class="card-body">
+                        <h3 class="card-title"> {{item.title}} </h3>
+                        <p class="card-text"> {{ item.description }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <span>Current price: </span>
+                            <span class="bid"> {{ item.bid }} </span>
                             
-                            {% endfor %}
-                        {% endif %}
+                            <span class="legend">USD</span>
+                        </small>
+                        <a href="{% url 'listing' listing_id=item.id%}" class="btn btn-outline-primary">View</a>
+                    </div>
+            </div>  
+        </div>
+    {% endif %}
 
-                        <span class="legend">USD</span>
-                    </small>
-                    <a href="{% url 'listing' listing_id=item.id%}" class="btn btn-outline-primary">View</a>
-                </div>
-            {% endif %}
-        </div>  
-    </div>
     {% endfor %}
     
 {% endblock %}

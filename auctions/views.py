@@ -10,11 +10,9 @@ from .models import User, Listing, Bid, Comment, CATEGORIES
 
 
 def index(request):
-    bids = Bid.objects.all()
     listing = Listing.objects.all()
     return render(request, "auctions/index.html", {
         "listings": listing,
-        "bids": bids
     })
 
 
@@ -81,7 +79,7 @@ def listing(request, listing_id):
     })
 
 
-# @login_required(login_url='auctions/login')
+@login_required(login_url='login')
 def add_comment(request, listing_id):
     user = request.user
     listing = listing_id
@@ -107,11 +105,12 @@ def get_price(listing_id):
         current_price = Listing.objects.get(id=listing_id).start_bid
         return current_price
 
+@login_required(login_url='login')
 def bid(request, listing_id):
     user = request.user
     listing = Listing.objects.get(id=listing_id)
     if request.method == "POST":
-        bid = int(request.POST['bid'])
+        bid = int(request.POST['bid'] or 0)
         get_starting_bid = Listing.objects.get(id=listing_id).start_bid
         current_price = get_price(listing_id)
         if bid <= get_starting_bid:

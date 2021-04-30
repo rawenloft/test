@@ -28,7 +28,7 @@ class Listing(models.Model):
     active = models.BooleanField(default=True)
 
 def __str__(self):
-    return f"Author: {self.created_by} {self.title} {self.category} {self.img_url} {self.description} {self.created_at}"
+    return f"Author: {self.created_by}, {self.title}, {self.category}, {self.img_url}, {self.description} {self.created_at}"
 
 class Bid(models.Model):
     listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_to_buy", default=True)
