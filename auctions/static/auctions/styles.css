@@ -16,6 +16,9 @@ body {
 a.cat_link {
     text-decoration: none !important;
 }
+h2 {
+    margin-right: 20px;
+}
 h3 {
     color: var(--secondary-color);
 }
@@ -66,6 +69,19 @@ form .input-group {
     margin-left: 0.25rem !important;
     width: 1em;
     height: 1em;
+}
+.w_list.btn {
+    line-height: 2em;
+    position: relative;
+    padding-right: 40px;
+}
+.i_eye {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.card.comment-card{
+    height: auto;
 }
 @media (min-width: 1200px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl {

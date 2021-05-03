@@ -4,6 +4,9 @@
 
     <h2 class="col-lg-12">{{ category }}</h2>
 
+    {% if message %}
+        <span class="alert alert-info">{{ message }}</span>
+    {% endif %}
     {% for item in item_list %}
     <div class="col">
         <div class="card" style="width: 18rem">
@@ -16,10 +19,10 @@
                 <div class="card-footer">
                     <small class="text-muted">
                         <span>Start price: </span>
-                        <span class="bid"> {{ item.start_bid}} </span>
+                        <span class="bid"> {{ item.current_price}} </span>
                         <span class="legend">USD</span>
                     </small>
-                    <a href="{% url 'listing' listing_id=item.id%}">View</a>
+                    <a href="{% url 'listing' listing_id=item.id%}" class="btn btn-outline-primary">View</a>
                 </div>
             {% endif %}
         </div>  

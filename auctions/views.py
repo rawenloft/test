@@ -6,11 +6,12 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import User, Listing, Bid, Comment, CATEGORIES
+from .models import User, Listing, Bid, Comment, CATEGORIES, Watchlist
 
 
 def index(request):
     listing = Listing.objects.all()
+    update_price(listing)
     return render(request, "auctions/index.html", {
         "listings": listing,
     })
@@ -67,16 +68,30 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+def check_watchlist(username, listing_id):
+    user = username
+    watchlist = Watchlist.objects.filter(user=user)
+    if watchlist:
+        for item in watchlist:
+            if item.user == user:
+                return True
+    return False
+
 def listing(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     current_price = get_price(listing_id)
     bids = Bid.objects.filter(listing_id=listing_id)
+    username = request.user
+    watched = Watchlist.objects.filter(user=username, listing=listing).exists()
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "current_price": current_price,
         "comments": Comment.objects.all(),
         "bids": bids,
+        "watched": watched,
     })
+
 
 
 @login_required(login_url='login')
@@ -88,8 +103,11 @@ def add_comment(request, listing_id):
         if user.is_authenticated:
             try:
                 query = request.POST['comment']
-                comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
-                comment.save()
+                if query:
+                    comment = Comment.objects.create(created_by=user,content=query, rel_listing=use_listing)
+                    comment.save()
+                else:
+                    messages.error(request, "Comment should not be empty!")
             except Exception as e:
                 print(e)
         else:
@@ -105,6 +123,13 @@ def get_price(listing_id):
         current_price = Listing.objects.get(id=listing_id).start_bid
         return current_price
 
+def update_price(listing):
+    for item in listing:
+        item_price = get_price(item.id)
+        current_price = Listing.objects.filter(id=item.id).update(current_price=item_price)
+        item.refresh_from_db()
+    
+
 @login_required(login_url='login')
 def bid(request, listing_id):
     user = request.user
@@ -113,17 +138,19 @@ def bid(request, listing_id):
         bid = int(request.POST['bid'] or 0)
         get_starting_bid = Listing.objects.get(id=listing_id).start_bid
         current_price = get_price(listing_id)
-        if bid <= get_starting_bid:
+        new_price = Listing.objects.filter(id=listing_id).update(current_price=current_price)
+        listing.refresh_from_db()
+        if bid <= current_price:
             return render(request,'auctions/listing.html', {
                 "listing": listing,
-                "current_price": current_price,
+                "current_price": listing.current_price,
                 "message": "Please bet more money!"
             })
         try:
             if listing.created_by == user:
                 return render(request,'auctions/listing.html', {
                     "listing": listing,
-                    "current_price": current_price,
+                    "current_price": listing.current_price,
                     "message": "You can not bet on your own listing."
                 }) 
             new_bid = Bid.objects.create(listing_id=listing,created_by=request.user, start_bid=listing.start_bid, bid=bid, )
@@ -132,7 +159,7 @@ def bid(request, listing_id):
             print(e)
     return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing.id,}))
 
-def create(request):
+def create_listing(request):
     user = request.user
     if request.method == "POST":
         title = request.POST["title"]
@@ -140,13 +167,12 @@ def create(request):
         description = request.POST["description"] or ""
         img_url = request.POST["img_url"] or ""
         start_bid = request.POST["start_bid"]
-
-        print(user, title, category, description, img_url, start_bid)
         try:
             listing = Listing.objects.create(created_by=user, title=title, category=category, description=description, img_url=img_url, start_bid=start_bid,created_at=True, active=True,)
             listing.save()
             return render(request, "auctions/listing.html", {
-                "listing":listing
+                "listing":listing,
+                "current_price": get_price(listing.id),
             })
         except Exception as e:
             print(e)
@@ -162,9 +188,41 @@ def categories(request):
     })
 
 def category(request, category):
-    item_list = Listing.objects.filter(category=category)
-    print(item_list)
+    listing = Listing.objects.filter(category=category)
+    if not listing:
+        message = "No items selling for now. Please come back later."
+    else:
+        message = ''
+    update_price(listing)
     return render(request, 'auctions/category.html', {
-        "item_list": item_list,
-        "category": category
+        "item_list": listing,
+        "category": category,
+        "message": message,
     })
+
+@login_required(login_url='login')
+def add_to_watch(request,listing_id):
+    user = request.user
+    listing = Listing.objects.get(id=listing_id)
+    watch_item = Watchlist.objects.filter(user=user, listing=listing)
+    if watch_item:
+        Watchlist.objects.filter(user=user,listing=listing).delete()
+    else:
+        watchlist = Watchlist(user=user, listing=listing)
+        watchlist.save()
+    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing.id,}))
+
+
+def watchlist(request, user_username):
+    user = request.user
+    watchlist = Watchlist.objects.filter(user=user)
+    if not watchlist:
+        message = "No items for watching."
+        print(watchlist)
+    else:
+        message = ""
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist,
+        "message": message,
+    })
+

@@ -24,11 +24,13 @@ class Listing(models.Model):
     description = models.TextField(max_length=254)
     img_url = models.URLField(max_length=200, blank=True)
     start_bid = models.IntegerField(default=1)
+    current_price = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     active = models.BooleanField(default=True)
+    watcher = models.ManyToManyField(User, through='Watchlist')
 
-def __str__(self):
-    return f"Author: {self.created_by}, {self.title}, {self.category}, {self.img_url}, {self.description} {self.created_at}"
+    def __str__(self):
+        return f"Author: {self.created_by}, {self.title}, {self.category}, {self.img_url}, {self.description}, {self.start_bid}, {self.created_at}"
 
 class Bid(models.Model):
     listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_to_buy", default=True)
@@ -37,8 +39,8 @@ class Bid(models.Model):
     bid = models.IntegerField(null=True)
     started_at = models.DateTimeField(auto_now=False, auto_now_add=True,)
 
-def __str__(self):
-    return f"Bidder: {self.created_by}, {self.bid}, for: {self.listing_id}, {self.started_at}"
+    def __str__(self):
+        return f"Bidder: {self.created_by}, {self.bid}, for: {self.listing_id}, {self.started_at}"
 
 
 class Comment(models.Model):
@@ -46,7 +48,12 @@ class Comment(models.Model):
     content = models.TextField(max_length=512)
     rel_listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_aim")
 
-def __str__(self):
-    return f"{self.id}: {self.created_by}, {self.content}, {self.rel_listing}"
+    def __str__(self):
+        return f"{self.id}: {self.created_by}, {self.content}, {self.rel_listing}"
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f"{self.user.username}, {self.listing.title}"

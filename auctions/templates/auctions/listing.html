@@ -24,7 +24,13 @@
             <div class="col-md-6">
             <div class="card-body ">
                 <div class="card-nav d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn btn-outline-primary">Add to Watchlist <span class="material-icons">visibility</span></a>
+                    {% if user.is_authenticated %}
+                       {% if watched %}
+                            <a href="{% url 'add_to_watchlist' listing_id=listing.id%}" class=" w_list btn btn-outline-primary">Remove from Watchlist <span class="material-icons i_eye">visibility_off</span></a>  
+                        {% else %}   
+                            <a href="{% url 'add_to_watchlist' listing_id=listing.id%}" class=" w_list btn btn-outline-primary">Add to Watchlist <span class="material-icons i_eye">visibility</span></a>  
+                        {% endif %}        
+                    {% endif %}
                     <a href="{% url 'index' %}" class="btn btn-outline-primary">Back</a>
                 </div>
                 <br>
@@ -39,22 +45,37 @@
                 <p class="card-text">
                     <small class="text-muted">Created at: {{listing.created_at}}</small>
                 </p>
-                <form action="{%url 'bid' listing_id=listing.id%}" method="post">
-                    {% csrf_token %}
-                    <div class="input-group mb-2 justify-content-between">
-                        <div class="input-group-prepend mb-2 col-5">
-                            <div class="input-group-text">Bid:</div>
-                            <input type="text" class="form-control col-8" id="inlineFormInputGroup" name="bid" placeholder="0">
+                
+                {% if listing.active %}
+                    <form action="{%url 'bid' listing_id=listing.id%}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-2 justify-content-between">
+                            <div class="input-group-prepend mb-2 col-5">
+                                <div class="input-group-text">Bid:</div>
+                                <input type="text" class="form-control col-8" id="inlineFormInputGroup" name="bid" placeholder="0">
+                            </div>
+                            <input type="submit" value="Place bid" class="btn btn-primary col-5 want">
                         </div>
-                        <input type="submit" value="Place bid" class="btn btn-primary col-5 want">
+                    </form>
+                
+                    <div class="form-group">
+                        <label for="active" class="check form-check-label">Lot is active</label>
+                        <input class="check form-check-input" type="checkbox" name="active" id="active" checked={{listing.active}} disabled>
+                        <a href="#" class="btn btn-outline-danger">Close deal</a>
                     </div>
-                </form>
-                <div class="form-group">
-                    <label for="active" class="check form-check-label">Lot is active</label>
-                    <input class="check form-check-input" type="checkbox" name="active" id="active" checked={{listing.active}} disabled>
-                    <a href="#" class="btn btn-outline-danger">Close deal</a>
-                 
-                </div>
+                {% endif %}
+                {% if not listing.active %}
+                    {% if user == bids.last.created_by %}
+                        <p class="message col alert alert-success">Congratulations!!! <br> You won this listing! Please contact <strong>{{listing.created_by|capfirst}}</strong> at <strong>{{listing.created_by.email}} </strong> for details of your delivery.</p>
+                    {% else %}
+                        {% if user == listing.created_by %}
+                            <p class="message alert alert-info">The Winner is <strong>{{bids.last.created_by | capfirst}}</strong>. Please contact at <strong>{{bids.last.created_by.email}}</strong> for delivery details.</p>
+                        {% else %}
+                            <p class="message alert alert-info">Deal is closed.</p>
+                        {% endif %}
+
+                    {% endif %}
+                {% endif %}
             </div>
             </div>
         </div>
@@ -86,19 +107,18 @@
     </div>
 
         {% if comments %}
-        <div class="card mb-6 col-8">
+        <div class="card comment-card mb-6 col-8">
             <div class="card-text">
                     <ul>
                         {% for comment in comments %}
                             {% if comment.rel_listing == listing %}
-                            <div >
                                 <li class="p-1 d-flex justify-content-between align-items-center">
                                     <span>{{ comment.content }}</span> 
                                     <span>by: <em>{{comment.created_by}}</em></span>
                                 </li>
-                                <br/>
-                            </div>
+                                    <hr/>
                             {% endif %}
+
                         {% endfor %}
                     </ul>
             </div>
