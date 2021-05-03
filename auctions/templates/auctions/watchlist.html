@@ -1,7 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}    
-    <h2 class="col-lg-12">{{ user.username|capfirst }}'s watchlist</h2>
+    <h2 class="col-lg-12 text-white">{{ user.username|capfirst }}'s watchlist</h2>
 
     {% if message %}
         <div class="alert alert-info">{{ message }}</div>

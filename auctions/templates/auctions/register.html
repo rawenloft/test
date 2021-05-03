@@ -3,11 +3,11 @@
 {% block body %}
 
     <div class="d-flex flex-column">
-        <h2>Register</h2>
+        <h2 class="text-white">Register</h2>
    
 
         {% if message %}
-            <div>{{ message }}</div>
+            <div class="alert alert-danger">{{ message }}</div>
         {% endif %}
 
         <form action="{% url 'register' %}" method="post">
@@ -27,6 +27,6 @@
             <input class="btn btn-primary" type="submit" value="Register">
         </form>
 
-        <div class="form footer">Already have an account? <a href="{% url 'login' %}">Log In here.</a></div>
+        <div class="form footer text-light">Already have an account? <a href="{% url 'login' %}" class="text-info">Log In here.</a></div>
     </div>
 {% endblock %}

@@ -34,12 +34,15 @@
                     <a href="{% url 'index' %}" class="btn btn-outline-primary">Back</a>
                 </div>
                 <br>
-                <h5 class="card-title">{{listing.title}}</h5>
+                <h4 class="card-title">{{listing.title}}</h4>
                 <p class="card-text">{{listing.description}}</p>
                 <p class="card-text d-flex justify-content-between">
                     <small class="text-muted">Created by: {{listing.created_by|capfirst}}</small>
-
-                    <small class="text-muted">Last bid by: {{bids.last.created_by|capfirst}}</small>
+                    {% if bids %}
+                        <small class="text-muted">Last bid by: <span class="bidder badge badge-primary">{{bids.last.created_by|capfirst}}</span></small>
+                    {% else %}
+                        
+                    {% endif %}
                 </p>
                 
                 <p class="card-text">
@@ -57,19 +60,28 @@
                             <input type="submit" value="Place bid" class="btn btn-primary col-5 want">
                         </div>
                     </form>
-                
-                    <div class="form-group">
-                        <label for="active" class="check form-check-label">Lot is active</label>
-                        <input class="check form-check-input" type="checkbox" name="active" id="active" checked={{listing.active}} disabled>
-                        <a href="#" class="btn btn-outline-danger">Close deal</a>
-                    </div>
+                    {% if user == listing.created_by %}
+                        <div class="custom-control custom-switch">
+                            
+                            <a href="{% url 'close' listing_id=listing.id %}" class="btn btn-danger">Close deal</a>
+                        </div>
+                    {% else %}
+                        <p class="message" style="color:var(--orange)"><strong>Lot is active.</strong></p>
+                    {% endif %}
                 {% endif %}
                 {% if not listing.active %}
                     {% if user == bids.last.created_by %}
                         <p class="message col alert alert-success">Congratulations!!! <br> You won this listing! Please contact <strong>{{listing.created_by|capfirst}}</strong> at <strong>{{listing.created_by.email}} </strong> for details of your delivery.</p>
                     {% else %}
                         {% if user == listing.created_by %}
-                            <p class="message alert alert-info">The Winner is <strong>{{bids.last.created_by | capfirst}}</strong>. Please contact at <strong>{{bids.last.created_by.email}}</strong> for delivery details.</p>
+                            <div class="custom-control custom-switch">
+                                <a href="{% url 'close' listing_id=listing.id %}" class="btn btn-success">Open deal</a>
+                            </div>
+                            {% if not bids.last.created_by %}
+                                <p class="message alert alert-info">There was no bids on this listing. You can try again later.</p>
+                            {% else %}
+                                <p class="message alert alert-info">The Winner is <strong>{{bids.last.created_by | capfirst}}</strong>. Please contact at <strong>{{bids.last.created_by.email}}</strong> for delivery details.</p>
+                            {% endif %}
                         {% else %}
                             <p class="message alert alert-info">Deal is closed.</p>
                         {% endif %}
@@ -112,11 +124,11 @@
                     <ul>
                         {% for comment in comments %}
                             {% if comment.rel_listing == listing %}
-                                <li class="p-1 d-flex justify-content-between align-items-center">
+                                <li class="p-2 d-flex justify-content-between align-items-center bg-light">
                                     <span>{{ comment.content }}</span> 
-                                    <span>by: <em>{{comment.created_by}}</em></span>
+                                    <span>by: <span class="badge badge-info">{{comment.created_by}}</span></span>
                                 </li>
-                                    <hr/>
+                                <div class="col-12 border"></div>
                             {% endif %}
 
                         {% endfor %}

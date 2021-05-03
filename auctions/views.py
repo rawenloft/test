@@ -10,10 +10,16 @@ from .models import User, Listing, Bid, Comment, CATEGORIES, Watchlist
 
 
 def index(request):
+    user = request.user
     listing = Listing.objects.all()
     update_price(listing)
+    if user.is_authenticated:
+        watchlist = Watchlist.objects.filter(user=user)
+    else:
+        watchlist = ''
     return render(request, "auctions/index.html", {
         "listings": listing,
+        "watchlist": watchlist,
     })
 
 
@@ -82,7 +88,12 @@ def listing(request, listing_id):
     current_price = get_price(listing_id)
     bids = Bid.objects.filter(listing_id=listing_id)
     username = request.user
-    watched = Watchlist.objects.filter(user=username, listing=listing).exists()
+    if username.is_authenticated:
+        watchlist = Watchlist.objects.filter(user=username)
+        watched = Watchlist.objects.filter(user=username, listing=listing).exists()
+    else: 
+        watchlist = ""
+        watched = ""
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
@@ -90,6 +101,7 @@ def listing(request, listing_id):
         "comments": Comment.objects.all(),
         "bids": bids,
         "watched": watched,
+        "watchlist": watchlist,
     })
 
 
@@ -134,6 +146,13 @@ def update_price(listing):
 def bid(request, listing_id):
     user = request.user
     listing = Listing.objects.get(id=listing_id)
+    bids = Bid.objects.filter(listing_id=listing_id)
+    if user.is_authenticated:
+        watchlist = Watchlist.objects.filter(user=user)
+        watched = Watchlist.objects.filter(user=user, listing=listing).exists()
+    else: 
+        watchlist = ""
+        watched = ""
     if request.method == "POST":
         bid = int(request.POST['bid'] or 0)
         get_starting_bid = Listing.objects.get(id=listing_id).start_bid
@@ -144,14 +163,20 @@ def bid(request, listing_id):
             return render(request,'auctions/listing.html', {
                 "listing": listing,
                 "current_price": listing.current_price,
-                "message": "Please bet more money!"
+                "message": "Your bet should be bigger than current price! Please bet more money!",
+                "bids": bids,
+                "watched": watched,
+                "watchlist": watchlist,
             })
         try:
             if listing.created_by == user:
                 return render(request,'auctions/listing.html', {
                     "listing": listing,
                     "current_price": listing.current_price,
-                    "message": "You can not bet on your own listing."
+                    "message": "You can not bet on your own listing.",
+                    "bids": bids,
+                    "watched": watched,
+                    "watchlist": watchlist,
                 }) 
             new_bid = Bid.objects.create(listing_id=listing,created_by=request.user, start_bid=listing.start_bid, bid=bid, )
             new_bid.save()
@@ -165,7 +190,7 @@ def create_listing(request):
         title = request.POST["title"]
         category = request.POST["category"]
         description = request.POST["description"] or ""
-        img_url = request.POST["img_url"] or ""
+        img_url = request.POST["img_url"] or "https://st4.depositphotos.com/14953852/22772/v/450/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg"
         start_bid = request.POST["start_bid"]
         try:
             listing = Listing.objects.create(created_by=user, title=title, category=category, description=description, img_url=img_url, start_bid=start_bid,created_at=True, active=True,)
@@ -179,15 +204,26 @@ def create_listing(request):
     return render(request, "auctions/create.html")
 
 def categories(request):
+    user = request.user
+    if user.is_authenticated:
+        watchlist = Watchlist.objects.filter(user=user)
+    else:
+        watchlist = ""
     categories = []
     for items in CATEGORIES:
         categories.append(list(items).pop())
 
     return render(request, 'auctions/categories.html', {
-        "categories": categories
+        "categories": categories,
+        "watchlist": watchlist,
     })
 
 def category(request, category):
+    user = request.user
+    if user.is_authenticated:
+        watchlist = Watchlist.objects.filter(user=user)
+    else:
+        watchlist = ""
     listing = Listing.objects.filter(category=category)
     if not listing:
         message = "No items selling for now. Please come back later."
@@ -198,6 +234,7 @@ def category(request, category):
         "item_list": listing,
         "category": category,
         "message": message,
+        "watchlist": watchlist,
     })
 
 @login_required(login_url='login')
@@ -225,4 +262,13 @@ def watchlist(request, user_username):
         "watchlist": watchlist,
         "message": message,
     })
+
+def close_listing(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    if listing.active:
+        deactivate = Listing.objects.filter(id=listing_id).update(active=False)
+    else:
+        deactivate = Listing.objects.filter(id=listing_id).update(active=True)
+    listing.refresh_from_db()
+    return HttpResponseRedirect(reverse('listing', kwargs={'listing_id':listing_id,}))
 

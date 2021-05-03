@@ -2,10 +2,10 @@
 
 {% block body %}
 <div class="d-flex flex-column">
-    <h2>Login</h2>
+    <h2 class="text-white">Login</h2>
 
     {% if message %}
-        <div>{{ message }}</div>
+        <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
 
     <form action="{% url 'login' %}" method="post">
@@ -19,6 +19,6 @@
         <input class="btn btn-primary" type="submit" value="Login">
     </form>
 
-    <div class="form footer">Don't have an account? <a href="{% url 'register' %}">Register here.</a></div>
+    <div class="form footer text-light">Don't have an account? <a href="{% url 'register' %}" class="text-info">Register here.</a></div>
 </div>
 {% endblock %}

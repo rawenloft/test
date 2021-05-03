@@ -12,16 +12,18 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <h3>{{ user.username|capfirst }}</h3>
-                <em>{{user.email}}</em>
-            {% else %}
-                Not signed in.
-            {% endif %}
+        <div class="head d-flex align-items-center justify-content-between pr-2 pl-2">
+            <h1 class="mx-auto text-white display-2">Auctions</h1>
+            <div class="bg-light mt-2 mb-2 p-4 border rounded mr-4">
+                {% if user.is_authenticated %}
+                    Signed in as <h3>{{ user.username|capfirst }}</h3>
+                    <em>{{user.email}}</em>
+                {% else %}
+                    Not signed in.
+                {% endif %}
+            </div>
         </div>
-        <ul class="nav">
+        <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'admin' %}">Admin</a>
             </li>
@@ -32,9 +34,15 @@
                 <a class="nav-link" href="{% url 'categories' %}">Categories</a>
             </li>
             {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' user_username=user.username%}">Watchlist</a><span></span>
-                </li>
+                {% if watchlist.count == 0 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'watchlist' user_username=user.username%}">Watchlist</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'watchlist' user_username=user.username%}">Watchlist<span class="badge badge-primary">{{watchlist.count}}</span></a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
                 </li>
@@ -57,6 +65,5 @@
                 {% endblock %}    
             </div>
         </div>
-
     </body>
 </html>

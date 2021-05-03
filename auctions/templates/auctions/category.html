@@ -2,31 +2,31 @@
 
 {% block body %}
 
-    <h2 class="col-lg-12">{{ category }}</h2>
+    <h2 class="col-lg-12 text-white">{{ category }}</h2>
 
     {% if message %}
         <span class="alert alert-info">{{ message }}</span>
     {% endif %}
     {% for item in item_list %}
-    <div class="col">
-        <div class="card" style="width: 18rem">
-            {% if item.active %}
-                <img src="{{item.img_url}}" class="card-img-top" style="height: 192px"/>
-                <div class="card-body">
-                    <h3 class="card-title"> {{item.title}} </h3>
-                    <p class="card-text"> {{ item.description }}</p>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">
-                        <span>Start price: </span>
-                        <span class="bid"> {{ item.current_price}} </span>
-                        <span class="legend">USD</span>
-                    </small>
-                    <a href="{% url 'listing' listing_id=item.id%}" class="btn btn-outline-primary">View</a>
-                </div>
-            {% endif %}
-        </div>  
-    </div>
+    {% if item.active %}
+        <div class="col">
+            <div class="card" style="width: 18rem">
+                    <img src="{{item.img_url}}" class="card-img-top" style="height: 192px"/>
+                    <div class="card-body">
+                        <h3 class="card-title"> {{item.title}} </h3>
+                        <p class="card-text"> {{ item.description }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <span>Start price: </span>
+                            <span class="bid"> {{ item.current_price}} </span>
+                            <span class="legend">USD</span>
+                        </small>
+                        <a href="{% url 'listing' listing_id=item.id%}" class="btn btn-outline-primary">View</a>
+                    </div>
+            </div>  
+        </div>
+    {% endif %}
     {% endfor %}
 
 
