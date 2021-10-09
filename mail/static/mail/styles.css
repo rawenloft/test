@@ -1,3 +1,11 @@
 textarea {
     min-height: 400px;
 }
+div.mail {
+    border: 1px solid var(--gray);
+    margin-bottom: .618em;
+}
+div.mail > span {
+    color:var(--secondary);
+    padding: 0.625em 1.25em;
+}
