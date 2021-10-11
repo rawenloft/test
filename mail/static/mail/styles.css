@@ -6,6 +6,29 @@ div.mail {
     margin-bottom: .618em;
 }
 div.mail > span {
-    color:var(--secondary);
+    color:var(--black);
     padding: 0.625em 1.25em;
+}
+div.unread {
+    border: 1px solid black;
+    background-color: white;
+    font-weight: 700;
+}
+div.read {
+    border: 1px solid var(--secondary);
+    background-color: lightgrey;
+    font-weight: normal;
+}
+.icon, .icon-label {
+    cursor: pointer;
+}
+.icon {
+    font-size: 1.2em;
+    margin-left: 1em;
+    color: var(--primary);
+}
+.icon-label {
+    font-size: 1em;
+    text-align: center;
+    margin-left: 0.5em;
 }
