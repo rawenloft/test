@@ -1,0 +1,28 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<div class="container">
+    {% if user.is_authenticated %}
+    <div class="row justify-content-start">
+    {% if message %}
+        <div class="alert alert-warning" role="alert">
+            {{ message }}
+        </div>  
+    {% endif %}
+    <form action="{% url 'new_post'%}" class="col-6" method="post">
+    {% csrf_token %}
+        <div class="form-group">
+            <br>
+            <label class=" post_title badge badge-light" for="post">New Post</label>
+            <textarea class="form-control" id="post" name="post" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">I Said so</button>
+    </form>
+
+    
+    </div>
+    {% endif %}
+</div>
+
+{% endblock  %}

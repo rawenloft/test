@@ -1,0 +1,45 @@
+:root {
+    --violet: violet;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    list-style: none;
+}
+hr {
+    margin: 0.5rem 0;
+}
+.time_posted, .caption {
+    color: #9b9999;
+    font-size: .818rem;
+}
+.author {
+    color: var(--secondary);
+}
+.like, .likes_number, .comment, .follow {
+    padding: .2rem 0.4rem;
+    text-align: center;
+    position: relative;
+}
+.comment {
+    margin-left: .4rem;
+}
+.card {
+    margin: 1rem;
+}
+.caption {
+    display: block;
+    margin-top: -0.2rem;
+}
+.user {
+    margin-top: 1.2rem;
+    padding: 0;
+}
+.follow_me {
+    justify-content: space-between;
+}
+.post_title {
+    font-size: 1.2rem;
+}

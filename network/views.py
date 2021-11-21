@@ -4,12 +4,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+
+from .models import User, Post, Comment
 
 
 def index(request):
     return render(request, "network/index.html")
-
 
 def login_view(request):
     if request.method == "POST":
@@ -61,3 +61,45 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def new_post(request):
+    if request.method == "POST":
+        author = request.user
+        post = request.POST["post"]
+
+        try:
+            new_post = Post.objects.create(author=author, post=post, created_at=True)
+            new_post.save()
+            message = "Posted successfully"
+            return render(request, "network/index.html", {
+                "message": message,
+            })
+        except Error:
+            message = "Your post is empty. Please write something."
+            return render(request, "network/new_post.html", {
+                "message": message,
+            })
+    return render(request, "network/new_post.html")
+
+def get_all_post(request):
+    user = request.user
+    posts = Post.objects.all().order_by('-created_at')
+    posts_count = Post.objects.filter(author=user).count
+    return render(request, "network/index.html",{
+        "posts": posts,
+        "posts_count": posts_count,
+    })
+
+def show_profile(request, user):
+    user = request.user
+    if user.is_authenticated:
+        posts = Post.objects.filter(author=user).order_by('-created_at')
+        posts_count = Post.objects.filter(author=user).count
+    # posts = Post.objects.all().order_by('-created_at')
+    # posts_count = Post.objects.filter(author=user).count
+        return render(request, "network/index.html", {
+            "posts": posts,
+            "posts_count": posts_count,
+        })
+    return render(request, "network/index.html") 
