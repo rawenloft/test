@@ -9,6 +9,7 @@ from .models import User, Post, Comment
 
 
 def index(request):
+    user = request.user
     return render(request, "network/index.html")
 
 def login_view(request):
@@ -74,6 +75,7 @@ def new_post(request):
             message = "Posted successfully"
             return render(request, "network/index.html", {
                 "message": message,
+                "show_user": author,
             })
         except Error:
             message = "Your post is empty. Please write something."
@@ -89,17 +91,19 @@ def get_all_post(request):
     return render(request, "network/index.html",{
         "posts": posts,
         "posts_count": posts_count,
+        "show_user": user,
     })
 
 def show_profile(request, user):
-    user = request.user
-    if user.is_authenticated:
-        posts = Post.objects.filter(author=user).order_by('-created_at')
-        posts_count = Post.objects.filter(author=user).count
-    # posts = Post.objects.all().order_by('-created_at')
-    # posts_count = Post.objects.filter(author=user).count
-        return render(request, "network/index.html", {
-            "posts": posts,
-            "posts_count": posts_count,
-        })
-    return render(request, "network/index.html") 
+    find_user = User.objects.filter(username=user).first()
+    posts = Post.objects.filter(author=find_user).order_by('-created_at')
+    posts_count = Post.objects.filter(author=find_user).count
+    signal = True
+# posts = Post.objects.all().order_by('-created_at')
+# posts_count = Post.objects.filter(author=user).count
+    return render(request, "network/index.html", {
+        "posts": posts,
+        "posts_count": posts_count,
+        "show_user": find_user,
+        "signal": signal,
+    })

@@ -38,7 +38,7 @@ hr {
     padding: 0;
 }
 .follow_me {
-    justify-content: space-between;
+    justify-content: space-around;
 }
 .post_title {
     font-size: 1.2rem;

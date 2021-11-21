@@ -18,7 +18,7 @@
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_profile' user=user.username %}"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link font-weight-bold" href="{% url 'show_profile' user=user.username %}">{{ user.username | capfirst }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'new_post' %}">New Post</a>
