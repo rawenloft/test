@@ -1,0 +1,31 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card col-8" style="width: 16rem;">
+                <div class="card-body">
+                    <p class="card-text">{{ post.post }}</p>
+                    <hr>
+                    <div class="">
+                        <div class="likes d-flex flex-row">
+                            <i class="bi bi-heart like"></i>
+                            <span class="likes_number">{{ post.like }}</span>
+            
+                            <i class="bi bi-chat comment"></i>
+                        
+                        </div>
+                        <div class="d-flex justify-content-between">
+                        <a href="{% url 'show_profile' user=post.author %}" class="author">by {{ post.author }}</a>
+                            <span class="time_posted">{{ post.created_at }}</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        {% endfor %}
+    {% endif %}
+
+{% endblock  %}

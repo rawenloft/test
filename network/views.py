@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Follow, Post, Comment, Like
 
 
 def index(request):
@@ -62,8 +62,51 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-def profile(request):
-    user = request.user
-    if user.is_authenticated:
-        print("Hello!")
-    return render(request, "network/profile.html")
+def profile(request, user):
+    me = request.user
+    user = User.objects.filter(username=user)
+    all_follows = Follow.objects.filter(user_id=user.first()).count()
+    all_following = Follow.objects.filter(following_user_id=user.first()).count()
+
+    if me.is_authenticated:
+        check_follow = Follow.objects.filter(user_id=me, following_user_id=user.first())
+        flag = False
+        print(check_follow, flag)
+        if check_follow:
+            flag = True
+            print(check_follow,flag)
+        else:
+            flag = False
+            print(check_follow, flag)
+        return render(request, "network/profile.html", {
+            "profile_user": user[0],
+            "flag": flag,
+            "follow_count": all_follows,
+            "following_count": all_following,
+        })
+    return HttpResponseRedirect(reverse("index"))
+
+def follow(request, user):
+    me = request.user
+    follow = User.objects.get(username=user)
+    check_follow = Follow.objects.filter(user_id=me, following_user_id=follow)
+    if check_follow:
+        check_follow.delete()
+    else:
+        follow_user = Follow.objects.create(user_id=me, following_user_id=follow)
+        follow_user.save()
+    print(me, follow)
+    return HttpResponseRedirect(reverse('profile', args=[follow]))
+
+def all_posts(request):
+    me = request.user
+    posts = Post.objects.all().order_by("-created_at")
+    posts_count = Post.objects.filter(author=me).count
+    return render(request, "network/posts.html", {
+        "posts": posts,
+        "posts_count": posts_count,
+    })
+
+def new_post(request):
+    me = request.user
+    return render(request, "network/new_post.html")

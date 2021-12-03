@@ -1,13 +1,77 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div class="card" style="width: 18rem;">
+    <div class="card col-6 profile">
     <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        <div class="profile__image mb-3"></div>
+        <div class="profile__card col-12 d-flex justify-content-start">
+            <div class="card-subtitle mr-4">
+                <div class="caption font-weight-bold">{{ profile_user | capfirst }}</div>
+                <span class="caption__join--date">{{ profile_user.date_joined }}</span>
+            </div>
+            <div class="profile__follow col-8 d-flex justify-content-end align-items-center">
+            {% if profile_user != user%}
+                {% if flag %}
+                    <div class="profile__follow--button">
+                        <form method="post" action="{% url 'follow' user=profile_user%}">
+                            {% csrf_token %}
+                            <button name="follow" class="btn btn-outline-info" value="submit">Unfollow</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="profile__follow--button">
+                        <form method="post" action="{% url 'follow' user=profile_user%}">
+                            {% csrf_token %}
+                            <button name="follow" class="btn btn-outline-primary" value="submit">Follow</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+                <div class="profile__follow--following ml-3">
+                    <span class="profile__follow--count">{{ follow_count }}</span>
+                    <i class="bi bi-person-check"></i>
+                    <span class="profile__follow--following-caption">Following</span>
+                </div>
+
+                <div class="profile__follow--followers ml-3">
+                    <span class="profile__follow--count">{{ following_count}}</span>
+                    <i class="bi bi-people"></i>
+                    <span class="profile__follow--following-caption">Followers</span>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card col-8" style="width: 16rem;">
+                <div class="card-body">
+                    <p class="card-text">{{ post.post }}</p>
+                    <hr>
+                    <div class="">
+                        <div class="likes d-flex flex-row">
+                            <i class="bi bi-heart like"></i>
+                            <span class="likes_number">{{ post.like }}</span>
+            
+                            <i class="bi bi-chat comment"></i>
+                        
+                        </div>
+                        <div class="d-flex justify-content-between">
+                        <a href="{% url 'show_profile' user=post.author %}" class="author">by {{ post.author }}</a>
+                            <span class="time_posted">{{ post.created_at }}</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        {% endfor %}
+        {% else %}
+            <form method="post" action="{% url 'new_post' %}" class="mr-auto ml-auto">
+                {% csrf_token %}
+                <button name="new_post" class="btn btn-primary " value="submit">New post</button>
+            </form>
+    {% endif %}
 {% endblock %}

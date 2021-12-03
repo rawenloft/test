@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    outline: none;
+}
+
+.profile {
+    margin: 0 auto
+}
+.profile__image {
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    border: 2px solid grey;
+    background-color: snow;
+}
+.caption__join--date{
+    font-size: .618em;
+    color: gray;
+}
