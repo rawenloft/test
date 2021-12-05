@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -64,25 +64,28 @@ def register(request):
 
 def profile(request, user):
     me = request.user
-    user = User.objects.filter(username=user)
-    all_follows = Follow.objects.filter(user_id=user.first()).count()
-    all_following = Follow.objects.filter(following_user_id=user.first()).count()
-
     if me.is_authenticated:
+        user = User.objects.filter(username=user)
+        all_follows = Follow.objects.filter(user_id=user.first()).count()
+        all_following = Follow.objects.filter(following_user_id=user.first()).count()
+        show_user = user[0]
+        if show_user != me:
+            posts = Post.objects.filter(author=show_user)
+        else:
+            posts = Post.objects.filter(author=me)
+
         check_follow = Follow.objects.filter(user_id=me, following_user_id=user.first())
         flag = False
-        print(check_follow, flag)
         if check_follow:
             flag = True
-            print(check_follow,flag)
         else:
             flag = False
-            print(check_follow, flag)
         return render(request, "network/profile.html", {
-            "profile_user": user[0],
+            "profile_user": show_user,
             "flag": flag,
             "follow_count": all_follows,
             "following_count": all_following,
+            "posts": posts,
         })
     return HttpResponseRedirect(reverse("index"))
 
@@ -108,5 +111,25 @@ def all_posts(request):
     })
 
 def new_post(request):
-    me = request.user
-    return render(request, "network/new_post.html")
+    if request.method == "POST":
+        try:
+            author = request.user
+            post = request.POST["post"]
+            print(post, author)
+            new_post = Post.objects.create(author=author, post=post, created_at=True)
+            new_post.save()
+            message = "Posted successfully"
+            print(message)
+            return render(request, "network/profile.html", {
+                "message": message,
+                "user": author,
+                "profile_user": author,
+            })
+        except:
+            message = "Your post is empty. Please write something."
+            print(message)
+            return render(request, "network/profile.html", {
+                "message": message,
+                "user": author,
+                "profile_user": author,
+            })

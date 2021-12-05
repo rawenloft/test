@@ -1,7 +1,34 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div class="card col-6 profile">
+<div class="form_wrapper">
+
+    <div class="card new_post">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+    </div>
+    <div class="card new_post--form">
+        {% if user.is_authenticated %}
+            {% if message %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>  
+            {% endif %}
+        <div class="row justify-content-start">
+        <form action="{% url 'new_post' %}" class="col-12 post_form" method="POST">
+        {% csrf_token %}
+            <div class="form-group new_form">
+                <label class="post_title" for="post">New Post</label>
+                <textarea class="form-control mb-1" id="post" name="post" rows="2" required></textarea>
+                <button type="submit" class="btn btn-primary">Post it</button>
+            </div>
+        </form>    
+        </div>
+        {% endif %}
+    </div>
+</div>
+    <div class="card col-6 profile d-flex mr-auto ml-auto">
     <div class="card-body">
         <div class="profile__image mb-3"></div>
         <div class="profile__card col-12 d-flex justify-content-start">
@@ -46,20 +73,23 @@
 
     {% if posts %}
         {% for post in posts %}
-            <div class="card col-8" style="width: 16rem;">
+            <div class="card col-6 mr-auto ml-auto mt-1" >
                 <div class="card-body">
                     <p class="card-text">{{ post.post }}</p>
                     <hr>
+                    {% if profile_user == user%}
+                    <a href="#" class="edit_post">Edit</a>
+                    {% endif %}
                     <div class="">
                         <div class="likes d-flex flex-row">
                             <i class="bi bi-heart like"></i>
-                            <span class="likes_number">{{ post.like }}</span>
+                            <span class="likes_number">{{ post.like }} 0</span>
             
                             <i class="bi bi-chat comment"></i>
-                        
+                            <span class="comments_number">{{ post.like }} 0</span>
                         </div>
                         <div class="d-flex justify-content-between">
-                        <a href="{% url 'show_profile' user=post.author %}" class="author">by {{ post.author }}</a>
+                        <a href="{% url 'profile' user=post.author %}" class="author">by {{ post.author }}</a>
                             <span class="time_posted">{{ post.created_at }}</span>
                         </div>
                     </div>
@@ -68,10 +98,9 @@
             </div>
             
         {% endfor %}
-        {% else %}
-            <form method="post" action="{% url 'new_post' %}" class="mr-auto ml-auto">
+            {% comment %} <form method="post" action="{% url 'new_post' %}" class="mr-auto ml-auto">
                 {% csrf_token %}
                 <button name="new_post" class="btn btn-primary " value="submit">New post</button>
-            </form>
+            </form> {% endcomment %}
     {% endif %}
 {% endblock %}

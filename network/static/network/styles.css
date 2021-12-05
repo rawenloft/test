@@ -20,3 +20,42 @@
     font-size: .618em;
     color: gray;
 }
+.line {
+    width: 2rem;
+    height: 0.3rem;
+    background-color: grey;
+    transition: all .3s;
+}
+.line:not(:last-child) {
+    margin-bottom: 0.2em;
+}
+.post_title {
+    font-size: 1rem;
+    color: grey;
+}
+.new_post {
+    padding: 1.2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+    border: none;
+    transition: all .3s;
+}
+.new_post--form {
+    display: none;
+    margin: 0 auto 1rem;
+    border: none;
+    translate: all .3s;
+}
+.new_form {
+    display: inline-flex;
+    width: 17.75rem;
+    padding: 1rem;
+    flex-direction: column;
+    position: absolute;
+}
+.form_wrapper {
+    display: inline-flex;
+    flex-direction: column;
+}
